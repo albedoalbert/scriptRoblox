@@ -1,11 +1,223 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Script Roblox</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Albedo - Script</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+text-align:center;
+}
+
+.container{
+width:330px;
+margin:50px auto;
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+.btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:30px;
+color:white;
+font-size:16px;
+margin:10px 0;
+cursor:pointer;
+background:#ff9f43;
+}
+
+.done{
+background:#ddd !important;
+color:#777;
+cursor:not-allowed;
+filter:grayscale(1);
+}
+
+.bar{
+width:100%;
+height:8px;
+background:#ddd;
+border-radius:10px;
+margin-top:10px;
+}
+
+.fill{
+height:100%;
+width:0%;
+background:#7fb4d6;
+border-radius:10px;
+}
+
+.continue-box{
+position:relative;
+margin-top:20px;
+}
+
+.lock{
+background:#9cc5df;
+color:white;
+padding:15px;
+border-radius:30px;
+border:none;
+width:100%;
+cursor:pointer;
+transition:0.3s;
+}
+
+.unlock-anim{
+animation:unlockPop 0.6s ease;
+}
+
+@keyframes unlockPop{
+
+0%{
+transform:scale(0.7);
+opacity:0.4;
+}
+
+50%{
+transform:scale(1.1);
+}
+
+100%{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+.blur-lock{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+border-radius:30px;
+background:rgba(0,0,0,0.5);
+backdrop-filter:blur(4px);
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:18px;
+}
+
+</style>
 </head>
+
 <body>
-  <h1>Script Roblox</h1>
-  <p>Download script di repository ini.</p>
+
+<div class="container">
+
+<h2>Albedo – Script</h2>
+<p>"Support Creator"</p>
+
+<button id="task1" class="btn"
+onclick="doTask('https://saweria.co/Fandav')">
+💰 Donation
+</button>
+
+<br>
+Steps completed
+
+<div class="bar">
+<div class="fill" id="bar"></div>
+</div>
+
+<div class="continue-box">
+
+<button class="lock" id="continueBtn" onclick="goScript()">
+Continue to Script
+</button>
+
+<div class="blur-lock" id="lockLayer">🔒</div>
+
+</div>
+
+</div>
+
+<script>
+
+const limitTime = 60000;
+
+let progress = localStorage.getItem("progress") || 0;
+let lastTime = localStorage.getItem("time") || 0;
+let task1 = localStorage.getItem("task1") || 0;
+
+progress = Number(progress);
+lastTime = Number(lastTime);
+task1 = Number(task1);
+
+if(Date.now() - lastTime > limitTime){
+
+progress = 0;
+task1 = 0;
+
+localStorage.setItem("progress",0);
+localStorage.setItem("task1",0);
+
+}
+
+updateUI();
+
+function doTask(link){
+
+if(localStorage.getItem("task1") == 1){
+return;
+}
+
+window.open(link,"_blank");
+
+localStorage.setItem("task1",1);
+
+progress = 1;
+
+localStorage.setItem("progress",progress);
+localStorage.setItem("time",Date.now());
+
+updateUI();
+
+}
+
+function updateUI(){
+
+let percent=(progress/1)*100;
+document.getElementById("bar").style.width=percent+"%";
+
+if(localStorage.getItem("task1")==1){
+document.getElementById("task1").classList.add("done");
+}
+
+if(progress>=1){
+
+document.getElementById("lockLayer").style.display="none";
+
+document.getElementById("continueBtn")
+.classList.add("unlock-anim");
+
+}
+
+}
+
+function goScript(){
+
+if(progress < 1){
+return;
+}
+
+window.location.href="script.html";
+
+}
+
+</script>
+
 </body>
 </html>
