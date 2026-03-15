@@ -1,78 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Albedo Script Hub</title>
 
 <style>
 
 body{
-font-family:Arial;
-background:#f4f4f4;
+font-family:monospace;
+background:black;
+color:#00ff9c;
 margin:0;
 padding:15px;
 }
 
+/* MATRIX */
+
+#matrix{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* HEADER */
+
 .header{
+text-align:center;
 font-size:22px;
-font-weight:bold;
 margin-bottom:15px;
 }
 
+/* SEARCH */
+
 .search-box{
 width:100%;
-padding:12px;
-border-radius:10px;
-border:1px solid #ccc;
-margin-bottom:20px;
-font-size:16px;
+padding:10px;
+border-radius:8px;
+border:1px solid #00ff9c;
+background:black;
+color:#00ff9c;
+font-size:14px;
+margin-bottom:15px;
 }
+
+/* SCRIPT GRID */
 
 #script-list{
 display:grid;
-grid-template-columns:1fr;
-gap:15px;
+grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+gap:12px;
+max-width:900px;
+margin:auto;
 }
 
+/* CARD */
+
 .card{
-background:white;
-border-radius:12px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
+background:rgba(0,0,0,0.85);
+border:1px solid #00ff9c;
+border-radius:10px;
 overflow:hidden;
 cursor:pointer;
 transition:0.2s;
 }
 
 .card:hover{
-transform:scale(1.02);
+transform:scale(1.03);
 }
 
 .card img{
 width:100%;
-height:150px;
+height:120px;
 object-fit:cover;
 }
 
+/* CONTENT */
+
 .card-content{
-padding:12px;
+padding:10px;
 }
 
 .title{
-font-size:18px;
+font-size:15px;
 font-weight:bold;
-margin-bottom:5px;
 }
 
 .date{
-font-size:13px;
-color:#888;
-margin-bottom:5px;
+font-size:11px;
+color:#00cc7a;
 }
 
 .desc{
-font-size:14px;
-color:#555;
+font-size:12px;
+color:#aaa;
 }
 
 /* DETAIL PANEL */
@@ -82,74 +109,88 @@ position:fixed;
 bottom:0;
 left:0;
 width:100%;
-height:90%;
-background:white;
-border-radius:20px 20px 0 0;
-padding:20px;
+height:85%;
+background:black;
+border-top:2px solid #00ff9c;
+padding:15px;
 overflow:auto;
 display:none;
-box-shadow:0 -5px 20px rgba(0,0,0,0.2);
-animation:slideUp 0.3s;
 }
 
-@keyframes slideUp{
-from{transform:translateY(100%)}
-to{transform:translateY(0)}
-}
+/* CLOSE */
 
 .close-btn{
 position:absolute;
-top:15px;
-right:20px;
-font-size:22px;
-background:#eee;
+top:10px;
+right:15px;
+background:#00ff9c;
 border:none;
 border-radius:50%;
-width:35px;
-height:35px;
+width:30px;
+height:30px;
 cursor:pointer;
 }
+
+/* IMAGE */
 
 #script-detail img{
 width:100%;
 border-radius:8px;
-margin-bottom:15px;
+margin-bottom:10px;
 }
+
+/* COPY BUTTON */
 
 .get-btn{
 width:100%;
-padding:15px;
-background:#8a8f00;
-color:white;
+padding:12px;
+background:#00ff9c;
 border:none;
-border-radius:30px;
-font-size:18px;
+border-radius:20px;
+font-size:14px;
 cursor:pointer;
-margin-bottom:20px;
+margin-bottom:12px;
 }
 
-.script-info{
-background:#f7f7f7;
-padding:15px;
-border-radius:10px;
+/* SCRIPT BOX */
+
+.script-box{
+background:#111;
+padding:12px;
+border-radius:8px;
+font-size:11px;
+overflow:auto;
 }
 
-.script-info h3{
-margin-top:0;
+/* RESPONSIVE PC */
+
+@media(min-width:700px){
+
+.header{
+font-size:26px;
 }
 
-.features li{
-margin-bottom:5px;
+.card img{
+height:150px;
+}
+
+.get-btn{
+font-size:16px;
+}
+
 }
 
 </style>
+
 </head>
 
 <body>
 
+<canvas id="matrix"></canvas>
+
 <div class="header">Albedo Script Hub</div>
 
-<input 
+<input
 type="text"
 id="search"
 class="search-box"
@@ -160,12 +201,19 @@ onkeyup="searchScript()"
 <div id="script-list">
 
 <div class="card" onclick="showScript(1)">
+
 <img src="https://i.imgur.com/4l2wDjf.png">
+
 <div class="card-content">
-<div class="title">Blox Fruits Script – Quantum hub</div>
+
+<div class="title">Blox Fruits Script – Quantum Hub</div>
+
 <div class="date">15 March 2026</div>
-<div class="desc">No Key Auto Farm, Fast Attack...</div>
+
+<div class="desc">No Key Auto Farm Fast Attack</div>
+
 </div>
+
 </div>
 
 </div>
@@ -174,56 +222,114 @@ onkeyup="searchScript()"
 
 <div id="script-detail">
 
-<button class="close-btn" onclick="closeDetail()">✕</button>
+<button class="close-btn" onclick="closeDetail()">X</button>
 
 <h2 id="title"></h2>
 
-<div id="info" style="color:#777;margin-bottom:10px;"></div>
+<div id="info"></div>
 
 <img id="image">
 
-<div id="desc" style="margin-bottom:20px;"></div>
+<p id="desc"></p>
 
-<button class="get-btn" onclick="copyScript()">⬇ Get Script</button>
+<button class="get-btn" onclick="copyScript()">Copy Script</button>
 
-<div class="script-info">
+<div class="script-box" id="scriptPreview"></div>
 
 <h3>Game Info</h3>
+
 <div id="game"></div>
 
 <h3>Features</h3>
-<ul id="features"></ul>
 
-</div>
+<ul id="features"></ul>
 
 </div>
 
 <script>
 
+/* ANTI BYPASS */
+
+if(localStorage.getItem("progress")!=1){
+location.href="index.html";
+}
+
+/* MATRIX BACKGROUND */
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+
+const letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const matrix=letters.split("");
+
+const fontSize=14;
+const columns=canvas.width/fontSize;
+
+const drops=[];
+
+for(let x=0;x<columns;x++){
+drops[x]=1;
+}
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#00ff9c";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+
+const text=matrix[Math.floor(Math.random()*matrix.length)];
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975){
+drops[i]=0;
+}
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,33);
+
+/* SCRIPT DATABASE */
+
 let scripts={
+
 1:{
 title:"Blox Fruits Script – Quantum hub",
 author:"15 March 2026",
 image:"https://i.imgur.com/4l2wDjf.png",
-desc:"Blox Fruits script No Key Auto Farm Fast Attack Auto Master Auto Raid Auto Mastery fruit",
+desc:"Blox Fruits script No Key Auto Farm Fast Attack Auto Raid",
 game:"Game: Blox Fruits",
 features:[
-"auto fam level",
-"auto fam fast attack",
-"Auto fam bone",
+"Auto Farm Level",
+"Fast Attack",
 "Auto Mastery",
 "Auto Raid",
 "Auto Boss"
 ],
 script:`loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()`
 }
+
 };
 
 let currentScript;
 
+/* SHOW SCRIPT */
+
 function showScript(id){
 
 let data=scripts[id];
+
 currentScript=data.script;
 
 document.getElementById("script-detail").style.display="block";
@@ -233,26 +339,43 @@ document.getElementById("info").innerText=data.author;
 document.getElementById("image").src=data.image;
 document.getElementById("desc").innerText=data.desc;
 document.getElementById("game").innerText=data.game;
+document.getElementById("scriptPreview").innerText=data.script;
 
 let featureList=document.getElementById("features");
+
 featureList.innerHTML="";
 
 data.features.forEach(f=>{
+
 let li=document.createElement("li");
+
 li.innerText=f;
+
 featureList.appendChild(li);
+
 });
 
 }
 
+/* CLOSE */
+
 function closeDetail(){
+
 document.getElementById("script-detail").style.display="none";
+
 }
 
+/* COPY */
+
 function copyScript(){
+
 navigator.clipboard.writeText(currentScript);
-alert("Script copied!");
+
+alert("✔ Script Copied");
+
 }
+
+/* SEARCH */
 
 function searchScript(){
 
@@ -264,11 +387,13 @@ let input=document
 let cards=document.querySelectorAll(".card");
 
 cards.forEach(card=>{
+
 card.style.display=
 card.innerText
 .toLowerCase()
 .includes(input)
 ? "block":"none";
+
 });
 
 }
